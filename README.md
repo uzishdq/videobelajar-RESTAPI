@@ -81,8 +81,6 @@ Backend API untuk platform learning management system (LMS) VideoBelajar - Tugas
 - `order` - Purchase orders
 - `review` - Course reviews
 
-## Installation
-
 ### Prerequisites
 
 - Node.js (v18 or higher)
