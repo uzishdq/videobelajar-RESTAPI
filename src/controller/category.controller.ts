@@ -16,9 +16,19 @@ export class CategoryController {
 
   async getAll(req: Request, res: Response) {
     try {
-      const result = await this.categoryService.getAll();
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 10;
+      const search = req.query.search as string | undefined;
+      const sortOrder = (req.query.sortOrder as "asc" | "desc") || "asc";
 
-      return successResponse(res, "Category fetched", result);
+      const result = await this.categoryService.getAll({
+        page,
+        limit,
+        search,
+        sortOrder,
+      });
+
+      return successResponse(res, "Category fetched", result.data, result.meta);
     } catch (error) {
       return errorResponse(res, error);
     }

@@ -29,6 +29,9 @@ export const users = pgTable("user", {
   position: varchar("position", { length: 255 }).notNull(),
   role: userRoleEnum("role").default("STUDENT").notNull(),
   refreshToken: text("refresh_token"),
+  isVerified: boolean("is_verified").default(false),
+  verificationToken: text("verification_token"),
+  verificationTokenExpiry: timestamp("verification_token_expiry"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

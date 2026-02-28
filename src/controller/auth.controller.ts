@@ -23,7 +23,22 @@ export class AuthController {
 
       await this.authService.register(parse.data);
 
-      return successResponse(res, "registrasi berhasil");
+      return successResponse(
+        res,
+        "Terima kasih sudah mendaftar. Periksa email Anda dan klik tautan verifikasi untuk mengaktifkan akun.",
+      );
+    } catch (error) {
+      return errorResponse(res, error);
+    }
+  }
+
+  async verifyEmail(req: Request, res: Response) {
+    try {
+      const { token } = req.query;
+
+      await this.authService.verifyEmail(token as string);
+
+      return successResponse(res, "email berhasil diverifikasi");
     } catch (error) {
       return errorResponse(res, error);
     }

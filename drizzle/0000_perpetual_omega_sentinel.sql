@@ -180,6 +180,9 @@ CREATE TABLE "user" (
 	"position" varchar(255) NOT NULL,
 	"role" "users_role_enum" DEFAULT 'STUDENT' NOT NULL,
 	"refresh_token" text,
+	"is_verified" boolean DEFAULT false,
+	"verification_token" text,
+	"verification_token_expiry" timestamp,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );

@@ -5,9 +5,12 @@ export const successResponse = (
   res: Response,
   message: string,
   data?: any,
+  meta?: object,
   status: number = 200,
 ) => {
-  return res.status(status).json({ success: true, message, data });
+  return res
+    .status(status)
+    .json({ success: true, message, data, ...(meta && { meta }) });
 };
 
 export const errorResponse = (

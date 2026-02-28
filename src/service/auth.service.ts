@@ -8,6 +8,9 @@ import {
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { TUserRole } from "../utils/type/type.helper";
+import crypto from "crypto";
+import { resend } from "../lib/resend";
+import { verificationEmailTemplate } from "../utils/template/email-template";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string;
@@ -26,6 +29,9 @@ export class AuthService {
 
     const hashed = await bcrypt.hash(data.password, 10);
 
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const verificationTokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
+
     const payload = {
       email: data.email,
       password: hashed,
@@ -34,9 +40,41 @@ export class AuthService {
       phone: data.phoneNumber,
       job: "-",
       position: "-",
+      verificationToken,
+      verificationTokenExpiry,
     };
 
     await db.insert(users).values(payload).returning();
+
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: data.email,
+      subject: "Verifikasi Email - VideoBelajar",
+      html: verificationEmailTemplate(data.name, verificationToken),
+    });
+  }
+
+  async verifyEmail(token: string) {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.verificationToken, token))
+      .limit(1);
+
+    if (!user) throw new Error("token tidak valid");
+
+    if (new Date() > user.verificationTokenExpiry!) {
+      throw new Error("token sudah expired");
+    }
+
+    await db
+      .update(users)
+      .set({
+        isVerified: true,
+        verificationToken: null,
+        verificationTokenExpiry: null,
+      })
+      .where(eq(users.id, user.id));
   }
 
   async login(data: LoginInputSchemaType) {
