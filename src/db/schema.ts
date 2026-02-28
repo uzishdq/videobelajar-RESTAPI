@@ -12,7 +12,6 @@ import {
 } from "drizzle-orm/pg-core";
 
 // schema db
-
 export const userRoleEnum = pgEnum("users_role_enum", [
   "ADMIN",
   "STUDENT",

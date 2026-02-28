@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import categoryRouter from "./routes/category.route";
 import authRouter from "./routes/auth.route";
+import userRouter from "./routes/user.route";
 
 dotenv.config({
   quiet: true,
@@ -21,6 +22,7 @@ app.use(
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
 app.use("/api/category", categoryRouter);
 
 app.get("/", (req: Request, res: Response) => {
