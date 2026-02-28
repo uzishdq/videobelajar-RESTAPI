@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import categoryRouter from "./routes/category.route";
+import authRouter from "./routes/auth.route";
 
 dotenv.config({
   quiet: true,
@@ -19,6 +20,7 @@ app.use(
 
 app.use(express.json());
 
+app.use("/api/auth", authRouter);
 app.use("/api/category", categoryRouter);
 
 app.get("/", (req: Request, res: Response) => {

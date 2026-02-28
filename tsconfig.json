@@ -10,5 +10,5 @@
     "moduleResolution": "node",
     "resolveJsonModule": true
   },
-  "include": ["src"]
+  "include": ["src/**/*", "express.d.ts"]
 }
